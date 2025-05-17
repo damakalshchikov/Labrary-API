@@ -1,8 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Solution.Sendy.CSharp.TestTask.DataBase;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Регистрируем DatabaseContext
+builder.Services.AddDbContext<DatabaseContext>(options
+    => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
