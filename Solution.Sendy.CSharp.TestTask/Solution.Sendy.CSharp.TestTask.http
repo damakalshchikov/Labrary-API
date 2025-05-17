@@ -1,0 +1,6 @@
+@Solution.Sendy.CSharp.TestTask_HostAddress = http://localhost:5067
+
+GET {{Solution.Sendy.CSharp.TestTask_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
