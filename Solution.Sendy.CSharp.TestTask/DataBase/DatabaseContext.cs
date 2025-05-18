@@ -9,6 +9,7 @@ public class DatabaseContext : DbContext
     public DbSet<Author> Authors { get; set; }
     public DbSet<Book> Books { get; set; }
 
+    // Базовая настройка контекста данных
     public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
     {
