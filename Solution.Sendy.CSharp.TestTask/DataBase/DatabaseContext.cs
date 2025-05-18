@@ -13,4 +13,11 @@ public class DatabaseContext : DbContext
         : base(options)
     {
     }
+
+    // Метод конфигурации моделей
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        Seeder.SeedAuthors(modelBuilder); // Засеиваем начальные данные в Author
+        Seeder.SeedBooks(modelBuilder); // Засеиваем начальные данные в Book
+    }
 }
