@@ -7,5 +7,8 @@ riderModule.iml
 # JetBrains's IDEs
 /.idea
 
+# Конфигурации проекта
+*.json
+
 # БД
-*.db
+database.*
