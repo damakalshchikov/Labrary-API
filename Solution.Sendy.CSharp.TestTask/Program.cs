@@ -11,6 +11,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<DatabaseContext>(options
     => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Регистрируем AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
