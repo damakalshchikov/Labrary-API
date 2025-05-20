@@ -12,3 +12,5 @@ riderModule.iml
 
 # БД
 database.*
+
+*.user
