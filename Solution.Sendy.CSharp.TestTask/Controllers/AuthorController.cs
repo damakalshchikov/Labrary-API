@@ -54,9 +54,9 @@ public class AuthorController : ControllerBase
     public IActionResult UpdateAuthor(int id, [FromBody] UpdateAuthorDTO dto)
     {
         var author = _mapper.Map<Author>(_context.Authors.Find(id));
-        author.FirstName = dto.FirstName;
-        author.LastName = dto.LastName;
-        author.Email = dto.Email;
+        author.FirstName = dto.FirstName ?? author.FirstName;
+        author.LastName = dto.LastName ?? author.LastName;
+        author.Email = dto.Email ?? author.Email;
 
         _context.Authors.Update(author);
         _context.SaveChanges();
