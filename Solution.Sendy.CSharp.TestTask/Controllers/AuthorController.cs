@@ -24,6 +24,7 @@ public class AuthorController : ControllerBase
     public IActionResult GetAllAuthors()
     {
         var authors = _mapper.Map<List<AuthorDTO>>(_context.Authors.ToList());
+
         return Ok(authors);
     }
 
@@ -32,31 +33,34 @@ public class AuthorController : ControllerBase
     public IActionResult GetAuthor(int id)
     {
         var author = _mapper.Map<AuthorDTO>(_context.Authors.Find(id));
+
         return Ok(author);
     }
 
     // POST
-    [HttpPost("{firstName}/{lastName}")]
-    public IActionResult CreateAuthor(string firstName, string lastName)
+    [HttpPost]
+    public IActionResult CreateAuthor([FromBody] CreateAuthorDTO dto)
     {
-        var author = new Author {AuthorId = 10, FirstName = firstName, LastName = lastName, Email = ""};
+        var author = _mapper.Map<Author>(dto);
 
         _context.Authors.Add(author);
         _context.SaveChanges();
 
-        var result = _mapper.Map<AuthorDTO>(author);
-        return Ok(result);
+        return Ok();
     }
 
     // PUT
-    [HttpPut("{firstName}/{lastName}")]
-    public IActionResult UpdateAuthor([FromBody] UpdateAuthorDTO dto, string firstName, string lastName)
+    [HttpPut("{id}")]
+    public IActionResult UpdateAuthor(int id, [FromBody] UpdateAuthorDTO dto)
     {
-        var author = _mapper.Map<Author>(dto);
-        author.FirstName = firstName;
-        author.LastName = lastName;
+        var author = _mapper.Map<Author>(_context.Authors.Find(id));
+        author.FirstName = dto.FirstName;
+        author.LastName = dto.LastName;
+        author.Email = dto.Email;
+
         _context.Authors.Update(author);
         _context.SaveChanges();
+
         return Ok();
     }
 
@@ -65,6 +69,7 @@ public class AuthorController : ControllerBase
     public IActionResult DeleteAuthor(int id)
     {
         var author = _mapper.Map<Author>(_context.Authors.Find(id));
+
         _context.Authors.Remove(author);
         _context.SaveChanges();
         return Ok();
