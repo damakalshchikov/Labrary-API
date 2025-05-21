@@ -25,7 +25,7 @@ public class AuthorController : ControllerBase
     public IActionResult GetAllAuthors()
     {
         // Получаем всех авторов, которые есть в БД
-        var authors = _mapper.Map<List<AuthorDTO>>(_context.Authors.ToList());
+        var authors = _context.Authors.ToList();
 
         return Ok(authors);
     }
@@ -35,7 +35,7 @@ public class AuthorController : ControllerBase
     public IActionResult GetAuthor(int id)
     {
         // Получаем конкретного автора по его Id
-        var author = _mapper.Map<AuthorDTO>(_context.Authors.Find(id));
+        var author = _context.Authors.Find(id);
 
         return Ok(author);
     }
@@ -61,7 +61,7 @@ public class AuthorController : ControllerBase
     public IActionResult UpdateAuthor(int id, [FromBody] UpdateAuthorDTO dto)
     {
         // Получаем автора по Id
-        var author = _mapper.Map<Author>(_context.Authors.Find(id));
+        var author = _context.Authors.Find(id);
 
         // Если новые данные - NULL, то не перезаписываем их
         author.FirstName = dto.FirstName ?? author.FirstName;
@@ -70,6 +70,8 @@ public class AuthorController : ControllerBase
 
         // Обновляем автора и сохраняем изменения в БД
         _context.Authors.Update(author);
+        // Преобразуем DTO-объект в Author
+        _mapper.Map(dto, author);
         _context.SaveChanges();
 
         return Ok();
@@ -80,7 +82,10 @@ public class AuthorController : ControllerBase
     public IActionResult DeleteAuthor(int id)
     {
         // Получаем автора по Id
-        var author = _mapper.Map<Author>(_context.Authors.Find(id));
+        var author = _context.Authors.Find(id);
+
+        // Если нет такой записи - 404 код
+        if (author == null) return NotFound();
 
         // Удаляем автора и сохраняем изменения в БД
         _context.Authors.Remove(author);
