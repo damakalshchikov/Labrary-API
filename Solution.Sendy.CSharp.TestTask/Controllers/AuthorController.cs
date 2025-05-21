@@ -49,9 +49,7 @@ public class AuthorController : ControllerBase
     [HttpPost]
     public IActionResult CreateAuthor([FromBody] CreateAuthorDTO dto)
     {
-        // Создаём автора
-        // Если при POST-методе переданы пустые данные - NULL во всех полях,
-        // кроме Id
+        // Создаём автора из переданных данных клиента
         var author = _mapper.Map<Author>(dto);
 
         // Добавляем созданного автора и сохраняем изменения в БД
@@ -74,6 +72,8 @@ public class AuthorController : ControllerBase
 
         // Преобразуем DTO-объект в Author
         _mapper.Map(dto, author);
+
+        // Сохранение изменений в БД
         _context.SaveChanges();
 
         // Код 204. Пустой ответ
