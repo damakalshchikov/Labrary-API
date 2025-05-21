@@ -27,7 +27,8 @@ public class AuthorController : ControllerBase
         // Получаем всех авторов, которые есть в БД
         var authors = _context.Authors.ToList();
 
-        return Ok(authors);
+        // Код 200. Возвращаем список DTO-объектов клиенту
+        return Ok(_mapper.Map<List<AuthorDTO>>(authors));
     }
 
     // GET по Id
@@ -38,6 +39,8 @@ public class AuthorController : ControllerBase
         var author = _context.Authors.Find(id);
 
         return Ok(author);
+        // Код 200. Возвращаем DTO-объект клиенту
+        return Ok(_mapper.Map<AuthorDTO>(author));
     }
 
     // POST
@@ -54,6 +57,8 @@ public class AuthorController : ControllerBase
         _context.SaveChanges();
 
         return Ok();
+        // Код 201. Успешное создание записи
+        return CreatedAtAction(nameof(GetAuthor), new { id = author.AuthorId }, null);
     }
 
     // PUT
@@ -68,13 +73,12 @@ public class AuthorController : ControllerBase
         author.LastName = dto.LastName ?? author.LastName;
         author.Email = dto.Email ?? author.Email;
 
-        // Обновляем автора и сохраняем изменения в БД
-        _context.Authors.Update(author);
         // Преобразуем DTO-объект в Author
         _mapper.Map(dto, author);
         _context.SaveChanges();
 
-        return Ok();
+        // Код 204. Пустой ответ
+        return NoContent();
     }
 
     // DELETE
@@ -90,6 +94,8 @@ public class AuthorController : ControllerBase
         // Удаляем автора и сохраняем изменения в БД
         _context.Authors.Remove(author);
         _context.SaveChanges();
+
+        // Код 200. Успешное удаление
         return Ok();
     }
 }
