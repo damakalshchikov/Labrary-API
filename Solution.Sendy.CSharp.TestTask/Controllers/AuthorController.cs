@@ -38,7 +38,9 @@ public class AuthorController : ControllerBase
         // Получаем конкретного автора по его Id
         var author = _context.Authors.Find(id);
 
-        return Ok(author);
+        // Если нет такой записи - 404 код
+        if (author == null) return NotFound();
+
         // Код 200. Возвращаем DTO-объект клиенту
         return Ok(_mapper.Map<AuthorDTO>(author));
     }
@@ -56,7 +58,6 @@ public class AuthorController : ControllerBase
         _context.Authors.Add(author);
         _context.SaveChanges();
 
-        return Ok();
         // Код 201. Успешное создание записи
         return CreatedAtAction(nameof(GetAuthor), new { id = author.AuthorId }, null);
     }
@@ -68,10 +69,8 @@ public class AuthorController : ControllerBase
         // Получаем автора по Id
         var author = _context.Authors.Find(id);
 
-        // Если новые данные - NULL, то не перезаписываем их
-        author.FirstName = dto.FirstName ?? author.FirstName;
-        author.LastName = dto.LastName ?? author.LastName;
-        author.Email = dto.Email ?? author.Email;
+        // Если нет такой записи - 404 код
+        if (author == null) return NotFound();
 
         // Преобразуем DTO-объект в Author
         _mapper.Map(dto, author);
