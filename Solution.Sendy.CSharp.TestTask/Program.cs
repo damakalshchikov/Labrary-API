@@ -1,8 +1,27 @@
+using Serilog;
+using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
 using Solution.Sendy.CSharp.TestTask.DataBase;
 using Solution.Sendy.CSharp.TestTask.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Настройка Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("System", LogEventLevel.Warning)
+    .WriteTo.Console(
+        outputTemplate: builder.Configuration.GetSection("Logging:Console")["ConsoleOutputTemplate"]
+    )
+    .WriteTo.File(
+        $"./logs/{DateTime.Now:dd-MM-yyyy_HH-mm-ss}.log",
+        outputTemplate: builder.Configuration.GetSection("Logging:File")["FileOutputTemplate"]
+    )
+    .CreateLogger();
+
+// Подключаем Serilog
+builder.Host.UseSerilog();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
