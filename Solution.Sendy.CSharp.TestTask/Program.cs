@@ -36,9 +36,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 // Добавляем контроллеры
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 
+Log.Information("Сборка приложения...");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -55,4 +55,6 @@ app.UseHttpsRedirection();
 // Добавляем маршрутизацию для контроллеров
 app.MapControllers();
 
+Log.Information("Приложение успешно запущено");
 app.Run();
+Log.Information("Приложение успешно остановлено");
