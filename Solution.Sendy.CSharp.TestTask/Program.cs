@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Solution.Sendy.CSharp.TestTask.DataBase;
+using Solution.Sendy.CSharp.TestTask.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+// Добавляем middleware для логирования времени запросов
+app.UseMiddleware<TimingMiddleware>();
 
 app.UseHttpsRedirection();
 
