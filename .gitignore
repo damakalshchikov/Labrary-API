@@ -13,4 +13,7 @@ riderModule.iml
 # БД
 database.*
 
+# Логи
+*.log
+
 *.user
