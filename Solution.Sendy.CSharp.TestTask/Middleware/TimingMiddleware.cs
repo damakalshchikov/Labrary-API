@@ -37,7 +37,7 @@ public class TimingMiddleware
 
             // Записываем информацию о запросе в лог
             _logger.LogInformation(
-                "Запрос {Method} {Path} завершен за {Elapsed}мс. Статус: {StatusCode}",
+                "Запрос {Method} {Path} завершен за {Elapsed} мс. Статус: {StatusCode}",
                 context.Request.Method,
                 context.Request.Path,
                 elapsed,
