@@ -50,6 +50,9 @@ if (app.Environment.IsDevelopment())
 // Добавляем middleware для логирования времени запросов
 app.UseMiddleware<TimingMiddleware>();
 
+// Добавляем middleware для обработки исключений
+app.UseMiddleware<ExceptionsHandlerMiddleware>();
+
 // Добавляем middleware для проверки API ключа
 app.UseMiddleware<ApiKeyMiddleware>();
 
