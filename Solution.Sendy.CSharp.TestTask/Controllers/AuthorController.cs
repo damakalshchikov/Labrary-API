@@ -24,8 +24,8 @@ public class AuthorController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAuthorsAsync()
     {
-        // Получаем всех авторов, которые есть в БД
-        var authors = _context.Authors.ToList();
+        // Получаем список авторов
+        var authors = await _context.Authors.ToListAsync();
 
         // Код 200. Возвращаем список DTO-объектов клиенту
         return Ok(_mapper.Map<List<AuthorDTO>>(authors));

@@ -22,21 +22,22 @@ public class BookController : ControllerBase
 
     // GET список
     [HttpGet]
-    public IActionResult GetBooks()
+    public async Task<IActionResult> GetBooksAsync()
     {
-        // Получаем все книги, которые есть в БД
-        var books = _context.Books.ToList();
+        // Получаем список книг
+        var books = await _context.Books.ToListAsync();
 
         // Код 200. Возвращаем список DTO-объектов клиентов
+        // Код 200. Возвращаем список DTO-объектов клиенту
         return Ok(_mapper.Map<List<BookDTO>>(books));
     }
 
     // GET по Id
     [HttpGet("{id}")]
-    public IActionResult GetBook(int id)
+    public async Task<IActionResult> GetBookAsync(int id)
     {
         // Получаем конкретную книгу по её Id
-        var book = _context.Books.Find(id);
+        var book = await _context.Books.FindAsync(id);
 
         // Если такой записи нет - 404 код.
         if (book == null) return NotFound();
@@ -47,25 +48,25 @@ public class BookController : ControllerBase
 
     // POST
     [HttpPost]
-    public IActionResult PostBook([FromBody] CreateBookDTO dto)
+    public async Task<IActionResult> PostBookAsync([FromBody] CreateBookDTO dto)
     {
         // Создаём книгу из переданных данных клиента
         var book = _mapper.Map<Book>(dto);
 
         // Добавляем созданную книгу и сохраняем изменения в БД
-        _context.Books.Add(book);
-        _context.SaveChanges();
+        await _context.Books.AddAsync(book);
+        await _context.SaveChangesAsync();
 
         // Код 201. Успешное создание записи
-        return CreatedAtAction(nameof(GetBook), new {id = book.BookId}, null);
+        return CreatedAtRoute(new {id = book.BookId}, null);
     }
 
     // PUT
     [HttpPut("{id}")]
-    public IActionResult PutBook(int id, [FromBody] UpdateBookDTO dto)
+    public async Task<IActionResult> PutBookAsync(int id, [FromBody] UpdateBookDTO dto)
     {
         // Получаем книгу по Id
-        var book = _context.Books.Find(id);
+        var book = await _context.Books.FindAsync(id);
 
         // Если нет такой записи - 404 код
         if (book == null) return NotFound();
@@ -74,7 +75,7 @@ public class BookController : ControllerBase
         _mapper.Map(dto, book);
 
         // Сохраняем изменения в БД
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         // Код 204. Пустой ответ
         return NoContent();
@@ -82,17 +83,17 @@ public class BookController : ControllerBase
 
     // DELETE
     [HttpDelete("{id}")]
-    public IActionResult DeleteBook(int id)
+    public async Task<IActionResult> DeleteBookAsync(int id)
     {
         // Получаем книгу по Id
-        var book = _context.Books.Find(id);
+        var book = await _context.Books.FindAsync(id);
 
         // Если нет такой записи - 404 код
         if (book == null) return NotFound();
 
         // Удаляем книгу и сохраняем изменения в БД
         _context.Books.Remove(book);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         // Код 200. Успешное удаление
         return Ok();
