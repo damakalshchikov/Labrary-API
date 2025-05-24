@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Solution.Sendy.CSharp.TestTask.DataBase;
 using Solution.Sendy.CSharp.TestTask.DataBase.Models;
 using Solution.Sendy.CSharp.TestTask.DTOs;
@@ -27,7 +28,10 @@ public class AuthorController : ControllerBase
         // Получаем список авторов
         var authors = await _context.Authors.ToListAsync();
 
-        // Код 200. Возвращаем список DTO-объектов клиенту
+        // Если список пустой - 404 код
+        if (!authors.Any()) throw new InvalidOperationException("В базе данных отсутствуют авторы");
+
+        // Код 200. Возвращаем DTO-объект клиенту
         return Ok(_mapper.Map<List<AuthorDTO>>(authors));
     }
 
@@ -39,7 +43,7 @@ public class AuthorController : ControllerBase
         var author = await _context.Authors.FindAsync(id);
 
         // Если нет такой записи - 404 код
-        if (author == null) return NotFound();
+        if (author is null) throw new KeyNotFoundException($"Автор с Id={id} не найден");
 
         // Код 200. Возвращаем DTO-объект клиенту
         return Ok(_mapper.Map<AuthorDTO>(author));
@@ -68,7 +72,7 @@ public class AuthorController : ControllerBase
         var author = await _context.Authors.FindAsync(id);
 
         // Если нет такой записи - 404 код
-        if (author == null) return NotFound();
+        if (author is null) throw new KeyNotFoundException($"Автор с Id={id} не найден");
 
         // Преобразуем DTO-объект в Author
         _mapper.Map(dto, author);
@@ -88,7 +92,7 @@ public class AuthorController : ControllerBase
         var author = await _context.Authors.FindAsync(id);
 
         // Если нет такой записи - 404 код
-        if (author == null) return NotFound();
+        if (author is null) throw new KeyNotFoundException($"Автор с Id={id} не найден");
 
         // Удаляем автора и сохраняем изменения в БД
         _context.Authors.Remove(author);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Solution.Sendy.CSharp.TestTask.DataBase;
 using Solution.Sendy.CSharp.TestTask.DataBase.Models;
 using Solution.Sendy.CSharp.TestTask.DTOs;
@@ -27,7 +28,9 @@ public class BookController : ControllerBase
         // Получаем список книг
         var books = await _context.Books.ToListAsync();
 
-        // Код 200. Возвращаем список DTO-объектов клиентов
+        // Если список пустой - 404 код
+        if (!books.Any()) throw new InvalidOperationException("В базе данных отсутствуют книги");
+
         // Код 200. Возвращаем список DTO-объектов клиенту
         return Ok(_mapper.Map<List<BookDTO>>(books));
     }
@@ -40,7 +43,7 @@ public class BookController : ControllerBase
         var book = await _context.Books.FindAsync(id);
 
         // Если такой записи нет - 404 код.
-        if (book == null) return NotFound();
+        if (book is null) throw new KeyNotFoundException($"Книга с Id={id} не найдена");
 
         // Код 200. Возвращаем DTO-объект клиенту
         return Ok(_mapper.Map<BookDTO>(book));
@@ -69,7 +72,7 @@ public class BookController : ControllerBase
         var book = await _context.Books.FindAsync(id);
 
         // Если нет такой записи - 404 код
-        if (book == null) return NotFound();
+        if (book is null) throw new KeyNotFoundException($"Книга с Id={id} не найдена");
 
         // Преобразуем DTO-объект в Book
         _mapper.Map(dto, book);
@@ -89,7 +92,7 @@ public class BookController : ControllerBase
         var book = await _context.Books.FindAsync(id);
 
         // Если нет такой записи - 404 код
-        if (book == null) return NotFound();
+        if (book is null) throw new KeyNotFoundException($"Книга с Id={id} не найдена");
 
         // Удаляем книгу и сохраняем изменения в БД
         _context.Books.Remove(book);
