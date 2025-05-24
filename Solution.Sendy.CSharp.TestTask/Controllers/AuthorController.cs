@@ -22,7 +22,7 @@ public class AuthorController : ControllerBase
 
     // GET список
     [HttpGet]
-    public IActionResult GetAllAuthors()
+    public async Task<IActionResult> GetAllAuthorsAsync()
     {
         // Получаем всех авторов, которые есть в БД
         var authors = _context.Authors.ToList();
@@ -33,10 +33,10 @@ public class AuthorController : ControllerBase
 
     // GET по Id
     [HttpGet("{id}")]
-    public IActionResult GetAuthor(int id)
+    public async Task<IActionResult> GetAuthorAsync(int id)
     {
         // Получаем конкретного автора по его Id
-        var author = _context.Authors.Find(id);
+        var author = await _context.Authors.FindAsync(id);
 
         // Если нет такой записи - 404 код
         if (author == null) return NotFound();
@@ -47,25 +47,25 @@ public class AuthorController : ControllerBase
 
     // POST
     [HttpPost]
-    public IActionResult CreateAuthor([FromBody] CreateAuthorDTO dto)
+    public async Task<IActionResult> CreateAuthorAsync([FromBody] CreateAuthorDTO dto)
     {
         // Создаём автора из переданных данных клиента
         var author = _mapper.Map<Author>(dto);
 
         // Добавляем созданного автора и сохраняем изменения в БД
-        _context.Authors.Add(author);
-        _context.SaveChanges();
+        await _context.Authors.AddAsync(author);
+        await _context.SaveChangesAsync();
 
         // Код 201. Успешное создание записи
-        return CreatedAtAction(nameof(GetAuthor), new { id = author.AuthorId }, null);
+        return CreatedAtRoute(new { id = author.AuthorId }, _mapper.Map<AuthorDTO>(author));
     }
 
     // PUT
     [HttpPut("{id}")]
-    public IActionResult UpdateAuthor(int id, [FromBody] UpdateAuthorDTO dto)
+    public async Task<IActionResult> UpdateAuthorAsunc(int id, [FromBody] UpdateAuthorDTO dto)
     {
         // Получаем автора по Id
-        var author = _context.Authors.Find(id);
+        var author = await _context.Authors.FindAsync(id);
 
         // Если нет такой записи - 404 код
         if (author == null) return NotFound();
@@ -74,7 +74,7 @@ public class AuthorController : ControllerBase
         _mapper.Map(dto, author);
 
         // Сохранение изменений в БД
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         // Код 204. Пустой ответ
         return NoContent();
@@ -82,17 +82,17 @@ public class AuthorController : ControllerBase
 
     // DELETE
     [HttpDelete("{id}")]
-    public IActionResult DeleteAuthor(int id)
+    public async Task<IActionResult> DeleteAuthorAsync(int id)
     {
         // Получаем автора по Id
-        var author = _context.Authors.Find(id);
+        var author = await _context.Authors.FindAsync(id);
 
         // Если нет такой записи - 404 код
         if (author == null) return NotFound();
 
         // Удаляем автора и сохраняем изменения в БД
         _context.Authors.Remove(author);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         // Код 200. Успешное удаление
         return Ok();
