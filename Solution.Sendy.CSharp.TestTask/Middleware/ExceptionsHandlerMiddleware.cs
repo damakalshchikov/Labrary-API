@@ -19,10 +19,16 @@ public class ExceptionsHandlerMiddleware
         {
             await _next(context);
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is ArgumentNullException)
         {
             _logger.LogError(ex.Message);
-            await HandleExceptionAsync(context, ex);
+            await HandleExceptionAsync(context, ex, StatusCodes.Status400BadRequest);
+        }
+
+        catch (Exception ex) when (ex is InvalidOperationException || ex is KeyNotFoundException)
+        {
+            _logger.LogError(ex.Message);
+            await HandleExceptionAsync(context, ex, StatusCodes.Status404NotFound);
         }
     }
 
