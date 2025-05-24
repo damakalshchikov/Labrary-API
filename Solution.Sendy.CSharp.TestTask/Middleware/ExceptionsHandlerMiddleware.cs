@@ -32,12 +32,12 @@ public class ExceptionsHandlerMiddleware
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception, int status)
     {
         var exceptionResponse = new ExceptionsResponse(
             exception.Message,
             exception.GetType().Name,
-            StatusCodes.Status500InternalServerError
+            status
         );
 
         await context.Response.WriteAsJsonAsync(exceptionResponse);
