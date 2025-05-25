@@ -24,8 +24,20 @@ public class AuthorController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Получить список всех авторов
+    /// </summary>
+    /// <returns>Список авторов</returns>
+    /// <response code="200">Возвращает список авторов</response>
+    /// <response code="404">Если авторы не найдены</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // GET список
     [HttpGet]
+    [ProducesResponseType(typeof(List<AuthorDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAllAuthorsAsync()
     {
         // Получаем список авторов
