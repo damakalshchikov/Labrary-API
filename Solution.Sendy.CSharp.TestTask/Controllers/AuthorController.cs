@@ -39,6 +39,9 @@ public class AuthorController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAuthorAsync(int id)
     {
+        // Проверяем корректность Id
+        if (id <= 0) throw new ArgumentException("Id автора не может быть отрицательным");
+
         // Получаем конкретного автора по его Id
         var author = await _context.Authors.FindAsync(id);
 
@@ -56,6 +59,10 @@ public class AuthorController : ControllerBase
         // Создаём автора из переданных данных клиента
         var author = _mapper.Map<Author>(dto);
 
+        // Проверяем, нет ли автора с таким же email. Если есть - 400 код
+        var existingAuthor = _context.Authors.FirstOrDefault(a => a.Email == dto.Email);
+        if (!(existingAuthor is null)) throw new ArgumentException($"Автор с email {dto.Email} уже существует");
+
         // Добавляем созданного автора и сохраняем изменения в БД
         await _context.Authors.AddAsync(author);
         await _context.SaveChangesAsync();
@@ -68,6 +75,9 @@ public class AuthorController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAuthorAsunc(int id, [FromBody] UpdateAuthorDTO dto)
     {
+        // Проверяем корректность Id
+        if (id <= 0) throw new ArgumentException("Id автора не может быть отрицательным");
+
         // Получаем автора по Id
         var author = await _context.Authors.FindAsync(id);
 
@@ -88,6 +98,9 @@ public class AuthorController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAuthorAsync(int id)
     {
+        // Проверяем корректность Id
+        if (id <= 0) throw new ArgumentException("Id автора не может быть отрицательным");
+
         // Получаем автора по Id
         var author = await _context.Authors.FindAsync(id);
 
