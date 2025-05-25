@@ -44,12 +44,15 @@ public class ExceptionsHandlerMiddleware
 
     private async Task HandleExceptionAsync(HttpContext context, Exception exception, int status)
     {
+        // Подготовка ответа
         var exceptionResponse = new ExceptionsResponse(
             exception.Message,
             exception.GetType().Name,
             status
         );
 
+        // Отправка ответа
+        context.Response.StatusCode = status;
         await context.Response.WriteAsJsonAsync(exceptionResponse);
     }
 }
