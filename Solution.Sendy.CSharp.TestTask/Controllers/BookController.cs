@@ -82,8 +82,21 @@ public class BookController : ControllerBase
         return Ok(_mapper.Map<BookDTO>(book));
     }
 
+    /// <summary>
+    /// Создать новую книгу
+    /// </summary>
+    /// <param name="dto">Данные для создания книги</param>
+    /// <returns>Созданная книга</returns>
+    /// <response code="201">Книга успешно создана</response>
+    /// <response code="400">Если данные некорректные, автор не существует или книга с таким названием уже существует</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // POST
     [HttpPost]
+    [ProducesResponseType(typeof(BookDTO), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> PostBookAsync([FromBody] CreateBookDTO dto)
     {
         // Создаём книгу из переданных данных клиента
