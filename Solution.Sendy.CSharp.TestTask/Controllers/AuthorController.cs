@@ -153,8 +153,23 @@ public class AuthorController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Удалить автора
+    /// </summary>
+    /// <param name="id">Идентификатор автора</param>
+    /// <returns>Подтверждение удаления</returns>
+    /// <response code="200">Автор успешно удален</response>
+    /// <response code="400">Если идентификатор некорректный</response>
+    /// <response code="404">Если автор не найден</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // DELETE
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeleteAuthorAsync(int id)
     {
         // Проверяем корректность Id
