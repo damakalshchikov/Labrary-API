@@ -7,6 +7,9 @@ using Solution.Sendy.CSharp.TestTask.DTOs;
 
 namespace Solution.Sendy.CSharp.TestTask.Controllers;
 
+/// <summary>
+/// Контроллер для управления авторами книг
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 public class AuthorController : ControllerBase
