@@ -15,10 +15,12 @@ public class ExceptionsHandlerMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        // Пытаемся передать запрос следующему middleware в цепочке
         try
         {
             await _next(context);
         }
+        // Обрабатываем исключения, которые возникают при передаче некорректных данных
         catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
         {
             _logger.LogError(ex.Message);
