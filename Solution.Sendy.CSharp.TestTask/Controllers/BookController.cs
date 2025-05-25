@@ -39,6 +39,9 @@ public class BookController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetBookAsync(int id)
     {
+        // Проверяем корректность Id
+        if (id <= 0) throw new ArgumentException("Id книги не может быть отрицательным");
+
         // Получаем конкретную книгу по её Id
         var book = await _context.Books.FindAsync(id);
 
@@ -56,6 +59,10 @@ public class BookController : ControllerBase
         // Создаём книгу из переданных данных клиента
         var book = _mapper.Map<Book>(dto);
 
+        // Проверяем, нет ли книги с таким же названием. Если есть - 400 код
+        var existingBook = _context.Books.FirstOrDefault(b => b.Title == book.Title);
+        if (!(existingBook is null)) throw new ArgumentException($"Книга с названием {book.Title} уже существует");
+
         // Добавляем созданную книгу и сохраняем изменения в БД
         await _context.Books.AddAsync(book);
         await _context.SaveChangesAsync();
@@ -68,6 +75,9 @@ public class BookController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> PutBookAsync(int id, [FromBody] UpdateBookDTO dto)
     {
+        // Проверяем корректность Id
+        if (id <= 0) throw new ArgumentException("Id книги не может быть отрицательным");
+
         // Получаем книгу по Id
         var book = await _context.Books.FindAsync(id);
 
@@ -88,6 +98,9 @@ public class BookController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBookAsync(int id)
     {
+        // Проверяем корректность Id
+        if (id <= 0) throw new ArgumentException("Id книги не может быть отрицательным");
+
         // Получаем книгу по Id
         var book = await _context.Books.FindAsync(id);
 
