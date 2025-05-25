@@ -111,7 +111,7 @@ public class BookController : ControllerBase
         await _context.SaveChangesAsync();
 
         // Код 201. Успешное создание записи
-        return CreatedAtRoute(new {id = book.BookId}, null);
+        return CreatedAtRoute(new { id = book.BookId }, null);
     }
 
     // PUT
