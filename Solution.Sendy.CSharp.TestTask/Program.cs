@@ -77,8 +77,12 @@ builder.Services.AddAutoMapper(typeof(Program));
 // Добавляем контроллеры
 builder.Services.AddControllers();
 
-Log.Information("Сборка приложения...");
+// Собираем приложение
 var app = builder.Build();
+
+// Создаем экземпляр ILogger
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Сборка приложения завершена");
 
 if (app.Environment.IsDevelopment())
 {
@@ -106,7 +110,7 @@ app.UseHttpsRedirection();
 // Добавляем маршрутизацию для контроллеров
 app.MapControllers();
 
-Log.Information("Приложение успешно запущено");
-Log.Information("SwaggerUI доступен по адресу: /swagger");
+logger.LogInformation($"Приложение успешно запущено по адресу: {builder.Configuration["ASPNETCORE_URLS"]}");
+logger.LogInformation("SwaggerUI доступен по адресу: /swagger");
 app.Run();
-Log.Information("Приложение успешно остановлено");
+logger.LogInformation("Приложение успешно остановлено");
