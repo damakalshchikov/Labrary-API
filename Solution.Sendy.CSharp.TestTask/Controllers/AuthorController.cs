@@ -50,8 +50,23 @@ public class AuthorController : ControllerBase
         return Ok(_mapper.Map<List<AuthorDTO>>(authors));
     }
 
+    /// <summary>
+    /// Получить автора по идентификатору
+    /// </summary>
+    /// <param name="id">Идентификатор автора</param>
+    /// <returns>Информация об авторе</returns>
+    /// <response code="200">Возвращает информацию об авторе</response>
+    /// <response code="400">Если идентификатор некорректный</response>
+    /// <response code="404">Если автор не найден</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // GET по Id
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(AuthorDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAuthorAsync(int id)
     {
         // Проверяем корректность Id
