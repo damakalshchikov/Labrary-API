@@ -24,8 +24,20 @@ public class BookController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Получить список всех книг с информацией об авторах
+    /// </summary>
+    /// <returns>Список книг</returns>
+    /// <response code="200">Возвращает список книг</response>
+    /// <response code="404">Если книги не найдены</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // GET список
     [HttpGet]
+    [ProducesResponseType(typeof(List<BookDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetBooksAsync()
     {
         // Получаем список книг
