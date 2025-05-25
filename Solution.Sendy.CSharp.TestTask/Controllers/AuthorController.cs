@@ -82,8 +82,21 @@ public class AuthorController : ControllerBase
         return Ok(_mapper.Map<AuthorDTO>(author));
     }
 
+    /// <summary>
+    /// Создать нового автора
+    /// </summary>
+    /// <param name="dto">Данные для создания автора</param>
+    /// <returns>Созданный автор</returns>
+    /// <response code="201">Автор успешно создан</response>
+    /// <response code="400">Если данные некорректные или автор с таким email уже существует</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // POST
     [HttpPost]
+    [ProducesResponseType(typeof(AuthorDTO), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CreateAuthorAsync([FromBody] CreateAuthorDTO dto)
     {
         // Создаём автора из переданных данных клиента
