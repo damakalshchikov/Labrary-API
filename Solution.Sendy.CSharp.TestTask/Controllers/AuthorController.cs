@@ -114,8 +114,24 @@ public class AuthorController : ControllerBase
         return CreatedAtRoute(new { id = author.AuthorId }, _mapper.Map<AuthorDTO>(author));
     }
 
+    /// <summary>
+    /// Обновить информацию об авторе
+    /// </summary>
+    /// <param name="id">Идентификатор автора</param>
+    /// <param name="dto">Обновленные данные автора</param>
+    /// <returns>Пустой ответ</returns>
+    /// <response code="204">Автор успешно обновлен</response>
+    /// <response code="400">Если идентификатор или данные некорректные</response>
+    /// <response code="404">Если автор не найден</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // PUT
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> UpdateAuthorAsunc(int id, [FromBody] UpdateAuthorDTO dto)
     {
         // Проверяем корректность Id
