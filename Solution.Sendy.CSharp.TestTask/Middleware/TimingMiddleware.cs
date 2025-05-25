@@ -15,7 +15,6 @@ public class TimingMiddleware
         _logger = logger;
     }
 
-    // Метод InvokeAsync обрабатывает запросы
     public async Task InvokeAsync(HttpContext context)
     {
         // Создаем Stopwatch для измерения времени выполнения запроса
