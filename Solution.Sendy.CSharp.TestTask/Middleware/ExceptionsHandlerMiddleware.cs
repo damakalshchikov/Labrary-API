@@ -1,4 +1,4 @@
-using Solution.Sendy.CSharp.TestTask.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Solution.Sendy.CSharp.TestTask.Middleware;
 
@@ -47,14 +47,18 @@ public class ExceptionsHandlerMiddleware
     private async Task HandleExceptionAsync(HttpContext context, Exception exception, int status)
     {
         // Подготовка ответа
-        var exceptionResponse = new ExceptionsResponse(
-            exception.Message,
-            exception.GetType().Name,
-            status
-        );
+        var problem = new ProblemDetails
+        {
+            Type = $"http://localhost:5067/errors/{exception.GetType().Name}",
+            Title = exception.GetType().Name,
+            Status = status,
+            Detail = exception.Message,
+            Instance = context.Request.Path
+        };
 
         // Отправка ответа
         context.Response.StatusCode = status;
-        await context.Response.WriteAsJsonAsync(exceptionResponse);
+        context.Response.ContentType = "application/problem+json";
+        await context.Response.WriteAsJsonAsync(problem);
     }
 }
