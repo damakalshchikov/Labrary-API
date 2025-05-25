@@ -11,7 +11,7 @@ namespace Solution.Sendy.CSharp.TestTask.Controllers;
 /// Контроллер для управления книгами
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class BookController : ControllerBase
 {
     // Контекст БД для доступа к ней, маппер для взаимодействия между моделями
@@ -70,7 +70,7 @@ public class BookController : ControllerBase
     public async Task<IActionResult> GetBookAsync(int id)
     {
         // Проверяем корректность Id
-        if (id <= 0) throw new ArgumentException("Id книги не может быть отрицательным");
+        if (id <= 0) throw new ArgumentException("Id книги не может быть меньше единицы");
 
         // Получаем конкретную книгу по её Id
         var book = await _context.Books.FindAsync(id);
@@ -135,7 +135,7 @@ public class BookController : ControllerBase
     public async Task<IActionResult> PutBookAsync(int id, [FromBody] UpdateBookDTO dto)
     {
         // Проверяем корректность Id
-        if (id <= 0) throw new ArgumentException("Id книги не может быть отрицательным");
+        if (id <= 0) throw new ArgumentException("Id книги не может быть меньше единицы");
 
         // Получаем книгу по Id
         var book = await _context.Books.FindAsync(id);
@@ -173,7 +173,7 @@ public class BookController : ControllerBase
     public async Task<IActionResult> DeleteBookAsync(int id)
     {
         // Проверяем корректность Id
-        if (id <= 0) throw new ArgumentException("Id книги не может быть отрицательным");
+        if (id <= 0) throw new ArgumentException("Id книги не может быть меньше единицы");
 
         // Получаем книгу по Id
         var book = await _context.Books.FindAsync(id);
