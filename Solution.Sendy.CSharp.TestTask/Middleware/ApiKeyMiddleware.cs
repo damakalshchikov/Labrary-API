@@ -16,17 +16,13 @@ public class ApiKeyMiddleware
         // Если отсутствует API ключ - код 401
         if (!context.Request.Headers.TryGetValue("x-api-key", out var apiKey))
         {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Отсутствует API ключ");
-            return;
+            throw new UnauthorizedAccessException("Отсутствует API ключ");
         }
 
         // Если API ключ неверный - код 403
         if (!_apiKey.Equals(apiKey))
         {
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            await context.Response.WriteAsync("Неверный API ключ");
-            return;
+            throw new UnauthorizedAccessException("Неверный API ключ");
         }
 
         // Если API ключ есть и он верный - пропускаем запрос
