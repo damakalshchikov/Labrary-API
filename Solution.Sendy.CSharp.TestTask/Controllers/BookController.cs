@@ -153,8 +153,23 @@ public class BookController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Удалить книгу
+    /// </summary>
+    /// <param name="id">Идентификатор книги</param>
+    /// <returns>Подтверждение удаления</returns>
+    /// <response code="200">Книга успешно удалена</response>
+    /// <response code="400">Если идентификатор некорректный</response>
+    /// <response code="404">Если книга не найдена</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // DELETE
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeleteBookAsync(int id)
     {
         // Проверяем корректность Id
