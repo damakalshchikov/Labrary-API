@@ -11,7 +11,7 @@ namespace Solution.Sendy.CSharp.TestTask.Controllers;
 /// Контроллер для управления авторами книг
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AuthorController : ControllerBase
 {
     // Контекст БД для доступа к ней, маппер для взаимодействия между моделями
@@ -70,7 +70,7 @@ public class AuthorController : ControllerBase
     public async Task<IActionResult> GetAuthorAsync(int id)
     {
         // Проверяем корректность Id
-        if (id <= 0) throw new ArgumentException("Id автора не может быть отрицательным");
+        if (id <= 0) throw new ArgumentException("Id автора не может быть меньше единицы");
 
         // Получаем конкретного автора по его Id
         var author = await _context.Authors.FindAsync(id);
@@ -135,7 +135,7 @@ public class AuthorController : ControllerBase
     public async Task<IActionResult> UpdateAuthorAsunc(int id, [FromBody] UpdateAuthorDTO dto)
     {
         // Проверяем корректность Id
-        if (id <= 0) throw new ArgumentException("Id автора не может быть отрицательным");
+        if (id <= 0) throw new ArgumentException("Id автора не может меньше единицы");
 
         // Получаем автора по Id
         var author = await _context.Authors.FindAsync(id);
@@ -173,7 +173,7 @@ public class AuthorController : ControllerBase
     public async Task<IActionResult> DeleteAuthorAsync(int id)
     {
         // Проверяем корректность Id
-        if (id <= 0) throw new ArgumentException("Id автора не может быть отрицательным");
+        if (id <= 0) throw new ArgumentException("Id автора не может быть меньше единицы");
 
         // Получаем автора по Id
         var author = await _context.Authors.FindAsync(id);
