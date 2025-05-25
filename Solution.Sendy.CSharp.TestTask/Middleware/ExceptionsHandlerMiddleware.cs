@@ -24,6 +24,17 @@ public class ExceptionsHandlerMiddleware
             _logger.LogError(ex.Message);
             await HandleExceptionAsync(context, ex, StatusCodes.Status400BadRequest);
         }
+        // Обрабатываем исключения, которые возникают при отсутствии API ключа или неверном API ключе
+        catch (Exception ex) when (ex is UnauthorizedAccessException)
+        {
+            _logger.LogError(ex.Message);
+            await HandleExceptionAsync(
+                context,
+                ex,
+                ex.Message.Contains("Отсутствует") ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden
+            );
+        }
+        // Обрабатываем исключения, которые возникают при отсутствии данных в БД
         catch (Exception ex) when (ex is InvalidOperationException || ex is KeyNotFoundException)
         {
             _logger.LogError(ex.Message);
