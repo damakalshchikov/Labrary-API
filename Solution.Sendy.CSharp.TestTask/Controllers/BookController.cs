@@ -114,8 +114,24 @@ public class BookController : ControllerBase
         return CreatedAtRoute(new { id = book.BookId }, null);
     }
 
+    /// <summary>
+    /// Обновить информацию о книге
+    /// </summary>
+    /// <param name="id">Идентификатор книги</param>
+    /// <param name="dto">Обновленные данные книги</param>
+    /// <returns>Пустой ответ</returns>
+    /// <response code="204">Книга успешно обновлена</response>
+    /// <response code="400">Если идентификатор или данные некорректные, или автор не существует</response>
+    /// <response code="404">Если книга не найдена</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // PUT
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> PutBookAsync(int id, [FromBody] UpdateBookDTO dto)
     {
         // Проверяем корректность Id
