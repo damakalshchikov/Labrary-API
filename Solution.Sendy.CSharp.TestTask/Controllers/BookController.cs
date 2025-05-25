@@ -50,8 +50,23 @@ public class BookController : ControllerBase
         return Ok(_mapper.Map<List<BookDTO>>(books));
     }
 
+    /// <summary>
+    /// Получить книгу по идентификатору
+    /// </summary>
+    /// <param name="id">Идентификатор книги</param>
+    /// <returns>Информация о книге</returns>
+    /// <response code="200">Возвращает информацию о книге</response>
+    /// <response code="400">Если идентификатор некорректный</response>
+    /// <response code="404">Если книга не найдена</response>
+    /// <response code="401">Если отсутствует API ключ</response>
+    /// <response code="403">Если API ключ неверный</response>
     // GET по Id
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(BookDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetBookAsync(int id)
     {
         // Проверяем корректность Id
