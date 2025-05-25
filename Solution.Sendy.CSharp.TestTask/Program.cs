@@ -3,6 +3,7 @@ using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
 using Solution.Sendy.CSharp.TestTask.DataBase;
 using Solution.Sendy.CSharp.TestTask.Middleware;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,9 +24,48 @@ Log.Logger = new LoggerConfiguration()
 // Подключаем Serilog
 builder.Host.UseSerilog();
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Подключаем Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Основная информация об API
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Library API",
+        Description = "Web API для управления авторами и книгами.",
+        Contact = new OpenApiContact
+        {
+            Name = "damakalshchikov",
+            Url = new Uri("https://github.com/damakalshchikov"),
+        }
+    });
+
+    // Настройка для API ключа
+    options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Name = "x-api-key",
+        Description = "Введите ваш API ключ в поле ниже"
+    });
+
+    // Требование API ключа для всех операций
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
+                }
+            },
+            new string[] { }
+        }
+    });
+});
 
 // Регистрируем DatabaseContext
 builder.Services.AddDbContext<DatabaseContext>(options
@@ -36,15 +76,20 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 // Добавляем контроллеры
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
 
 Log.Information("Сборка приложения...");
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // Включаем Swagger UI
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.DocumentTitle = "Library API";
+        options.SwaggerEndpoint("/v1/swagger.json", "Library API");
+        options.DisplayRequestDuration();
+    });
 }
 
 // Добавляем middleware для логирования времени запросов
@@ -62,5 +107,6 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 Log.Information("Приложение успешно запущено");
+Log.Information("SwaggerUI доступен по адресу: /swagger");
 app.Run();
 Log.Information("Приложение успешно остановлено");
