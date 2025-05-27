@@ -30,15 +30,12 @@ public class CreateAuthorDTO
 
 public class UpdateAuthorDTO
 {
-    [Required(ErrorMessage = "Имя автора  обязательно")]
     [StringLength(50, MinimumLength = 2, ErrorMessage = "Имя автора должно быть от 2 до 50 символов")]
-    public string? FirstName { get; set; } = string.Empty;
+    public string? FirstName { get; set; }
 
-    [Required(ErrorMessage = "Фамилия автора  обязательна")]
     [StringLength(50, MinimumLength = 2, ErrorMessage = "Фамилия автора должна быть от 2 до 50 символов")]
-    public string LastName { get; set; } = string.Empty;
+    public string? LastName { get; set; } 
 
-    [Required(ErrorMessage = "Email  обязателен")]
     [EmailAddress(ErrorMessage = "Email должен быть валидным")]
-    public string Email { get; set; } = string.Empty;
+    public string? Email { get; set; }
 }
