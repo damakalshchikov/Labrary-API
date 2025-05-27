@@ -24,11 +24,9 @@ public class CreateBookDTO
 
 public class UpdateBookDTO
 {
-    [Required(ErrorMessage = "Название книги  обязательно")]
     [StringLength(50, MinimumLength = 5, ErrorMessage = "Название книги должно быть от 5 до 50 символов")]
-    public string Title { get; set; } = string.Empty;
+    public string? Title { get; set; }
 
-    [Required(ErrorMessage = "Id автора обязательно")]
     [Range(1, int.MaxValue, ErrorMessage = "Id автора должен быть больше 0")]
-    public int AuthorId { get; set; } = 1;
+    public int? AuthorId { get; set; }
 }
