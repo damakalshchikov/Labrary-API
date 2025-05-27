@@ -143,8 +143,27 @@ public class AuthorController : ControllerBase
         // Если нет такой записи - 404 код
         if (author is null) throw new KeyNotFoundException($"Автор с Id={id} не найден");
 
-        // Преобразуем DTO-объект в Author
-        _mapper.Map(dto, author);
+        // Обновляем только предоставленные поля
+        if (!string.IsNullOrEmpty(dto.FirstName))
+        {
+            author.FirstName = dto.FirstName;
+        }
+
+        if (!string.IsNullOrEmpty(dto.LastName))
+        {
+            author.LastName = dto.LastName;
+        }
+
+        if (!string.IsNullOrEmpty(dto.Email))
+        {
+            // Проверяем, нет ли другого автора с таким email
+            var existingAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Email == dto.Email && a.AuthorId != id);
+            if (existingAuthor != null)
+            {
+                throw new ArgumentException($"Автор с email {dto.Email} уже существует");
+            }
+            author.Email = dto.Email;
+        }
 
         // Сохранение изменений в БД
         await _context.SaveChangesAsync();
