@@ -143,8 +143,19 @@ public class BookController : ControllerBase
         // Если нет такой записи - 404 код
         if (book is null) throw new KeyNotFoundException($"Книга с Id={id} не найдена");
 
-        // Преобразуем DTO-объект в Book
-        _mapper.Map(dto, book);
+        // Если указан новый AuthorId, проверяем существование автора
+        if (dto.AuthorId.HasValue)
+        {
+            var author = await _context.Authors.FindAsync(dto.AuthorId.Value);
+            if (author is null) throw new ArgumentException($"Автор с Id={dto.AuthorId.Value} не существует");
+            book.AuthorId = dto.AuthorId.Value;
+        }
+
+        // Если указано новое название, обновляем его
+        if (!string.IsNullOrEmpty(dto.Title))
+        {
+            book.Title = dto.Title;
+        }
 
         // Сохраняем изменения в БД
         await _context.SaveChangesAsync();
