@@ -7,7 +7,7 @@
 namespace Solution.Sendy.CSharp.TestTask.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialMirgation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,12 @@ namespace Solution.Sendy.CSharp.TestTask.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Books", x => x.BookId);
+                    table.ForeignKey(
+                        name: "FK_Books_Authors_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Authors",
+                        principalColumn: "AuthorId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -65,16 +71,21 @@ namespace Solution.Sendy.CSharp.TestTask.Migrations
                     { 6, 3, "Любовь к жизни" },
                     { 7, 4, "Наедине с собой" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_AuthorId",
+                table: "Books",
+                column: "AuthorId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Authors");
+                name: "Books");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Authors");
         }
     }
 }

@@ -10,8 +10,8 @@ using Solution.Sendy.CSharp.TestTask.DataBase;
 namespace Solution.Sendy.CSharp.TestTask.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250527070048_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250527073125_InitialMirgation")]
+    partial class InitialMirgation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,6 +86,8 @@ namespace Solution.Sendy.CSharp.TestTask.Migrations
 
                     b.HasKey("BookId");
 
+                    b.HasIndex("AuthorId");
+
                     b.ToTable("Books");
 
                     b.HasData(
@@ -131,6 +133,22 @@ namespace Solution.Sendy.CSharp.TestTask.Migrations
                             AuthorId = 4,
                             Title = "Наедине с собой"
                         });
+                });
+
+            modelBuilder.Entity("Solution.Sendy.CSharp.TestTask.DataBase.Models.Book", b =>
+                {
+                    b.HasOne("Solution.Sendy.CSharp.TestTask.DataBase.Models.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Solution.Sendy.CSharp.TestTask.DataBase.Models.Author", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }
