@@ -2,10 +2,12 @@
 
 #nullable disable
 
-namespace Solution.Sendy.CSharp.TestTask.DataBase.Migrations
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace Solution.Sendy.CSharp.TestTask.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +20,7 @@ namespace Solution.Sendy.CSharp.TestTask.DataBase.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false)
+                    Email = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -37,28 +39,42 @@ namespace Solution.Sendy.CSharp.TestTask.DataBase.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Books", x => x.BookId);
-                    table.ForeignKey(
-                        name: "FK_Books_Authors_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Authors",
-                        principalColumn: "AuthorId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_AuthorId",
+            migrationBuilder.InsertData(
+                table: "Authors",
+                columns: new[] { "AuthorId", "Email", "FirstName", "LastName" },
+                values: new object[,]
+                {
+                    { 1, "pushkin_kolotushkin@alex.org", "Александр", "Пушкин" },
+                    { 2, "lionFat@mail.ru", "Лев", "Толстой" },
+                    { 3, "londonUK@gmail.com", "Джек", "Лондон" },
+                    { 4, "stoicism@yandex.ru", "Марк", "Аврелий" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Books",
-                column: "AuthorId");
+                columns: new[] { "BookId", "AuthorId", "Title" },
+                values: new object[,]
+                {
+                    { 1, 1, "Сказка о царе Салтане" },
+                    { 2, 1, "Евгений Онегин" },
+                    { 3, 2, "Война и мир" },
+                    { 4, 2, "Анна Каренина" },
+                    { 5, 3, "Белый Клык" },
+                    { 6, 3, "Любовь к жизни" },
+                    { 7, 4, "Наедине с собой" }
+                });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Authors");
 
             migrationBuilder.DropTable(
-                name: "Authors");
+                name: "Books");
         }
     }
 }

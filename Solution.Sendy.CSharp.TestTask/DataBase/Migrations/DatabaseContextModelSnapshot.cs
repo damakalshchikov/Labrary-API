@@ -6,7 +6,7 @@ using Solution.Sendy.CSharp.TestTask.DataBase;
 
 #nullable disable
 
-namespace Solution.Sendy.CSharp.TestTask.DataBase.Migrations
+namespace Solution.Sendy.CSharp.TestTask.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
     partial class DatabaseContextModelSnapshot : ModelSnapshot
@@ -26,9 +26,11 @@ namespace Solution.Sendy.CSharp.TestTask.DataBase.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("AuthorId");
@@ -72,15 +74,14 @@ namespace Solution.Sendy.CSharp.TestTask.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AuthorId")
+                    b.Property<int>("AuthorId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("BookId");
-
-                    b.HasIndex("AuthorId");
 
                     b.ToTable("Books");
 
@@ -127,15 +128,6 @@ namespace Solution.Sendy.CSharp.TestTask.DataBase.Migrations
                             AuthorId = 4,
                             Title = "Наедине с собой"
                         });
-                });
-
-            modelBuilder.Entity("Solution.Sendy.CSharp.TestTask.DataBase.Models.Book", b =>
-                {
-                    b.HasOne("Solution.Sendy.CSharp.TestTask.DataBase.Models.Author", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
-                    b.Navigation("Author");
                 });
 #pragma warning restore 612, 618
         }
