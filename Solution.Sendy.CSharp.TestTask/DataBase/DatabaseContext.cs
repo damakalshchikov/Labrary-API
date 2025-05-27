@@ -18,6 +18,13 @@ public class DatabaseContext : DbContext
     // Метод конфигурации моделей
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Настраиваем отношение между Book и Author
+        modelBuilder.Entity<Book>()
+            .HasOne(b => b.Author)
+            .WithMany(a => a.Books)
+            .HasForeignKey(b => b.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         Seeder.SeedAuthors(modelBuilder); // Засеиваем начальные данные в Author
         Seeder.SeedBooks(modelBuilder); // Засеиваем начальные данные в Book
     }
