@@ -1,4 +1,6 @@
-﻿namespace Solution.Sendy.CSharp.TestTask.DataBase.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Solution.Sendy.CSharp.TestTask.DataBase.Models;
 
 public class Book
 {
