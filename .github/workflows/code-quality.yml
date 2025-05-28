@@ -1,0 +1,36 @@
+name: Проверка качества кода
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Установка .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Восстановление зависимостей
+      run: dotnet restore
+
+    - name: Сборка проекта
+      run: dotnet build --no-restore
+
+    - name: Запуск анализаторов кода
+      run: dotnet format --verify-no-changes --verbosity diagnostic
+
+    - name: Проверка стиля кода
+      uses: github/super-linter@v5
+      env:
+        VALIDATE_ALL_CODEBASE: false
+        DEFAULT_BRANCH: main
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VALIDATE_CSHARP: true
