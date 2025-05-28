@@ -43,5 +43,5 @@ public class TimingMiddleware
                 context.Response.StatusCode
             );
         }
-    }    
+    }
 }

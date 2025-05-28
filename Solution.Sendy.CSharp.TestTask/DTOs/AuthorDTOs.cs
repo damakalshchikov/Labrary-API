@@ -9,7 +9,7 @@ public class AuthorDTO
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
-    
+
     public string? Email { get; set; }
 }
 
@@ -34,7 +34,7 @@ public class UpdateAuthorDTO
     public string? FirstName { get; set; }
 
     [StringLength(50, MinimumLength = 2, ErrorMessage = "Фамилия автора должна быть от 2 до 50 символов")]
-    public string? LastName { get; set; } 
+    public string? LastName { get; set; }
 
     [EmailAddress(ErrorMessage = "Email должен быть валидным")]
     public string? Email { get; set; }

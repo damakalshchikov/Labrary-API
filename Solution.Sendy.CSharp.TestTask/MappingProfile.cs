@@ -4,9 +4,9 @@ using Solution.Sendy.CSharp.TestTask.DataBase.Models;
 
 namespace Solution.Sendy.CSharp.TestTask;
 
-public class MappingProfile  : Profile
+public class MappingProfile : Profile
 {
-    public MappingProfile ()
+    public MappingProfile()
     {
         // Author из БД (EF Core) <-> AutoMapper
         CreateMap<Author, AuthorDTO>();
